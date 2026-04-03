@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SalesManager {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  targets   SalesTarget[]
+  invoices  Invoice[]
+}
+
+model ProductManager {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  targets   ProductTarget[]
+  invoices  Invoice[]
+}
+
+model SalesTarget {
+  id             String       @id @default(cuid())
+  salesManagerId String
+  year           Int          @default(2026)
+  
+  jan            Decimal      @default(0)
+  feb            Decimal      @default(0)
+  mar            Decimal      @default(0)
+  apr            Decimal      @default(0)
+  may            Decimal      @default(0)
+  jun            Decimal      @default(0)
+  jul            Decimal      @default(0)
+  aug            Decimal      @default(0)
+  sep            Decimal      @default(0)
+  oct            Decimal      @default(0)
+  nov            Decimal      @default(0)
+  dec            Decimal      @default(0)
+
+  salesManager   SalesManager @relation(fields: [salesManagerId], references: [id], onDelete: Cascade)
+
+  @@unique([salesManagerId, year])
+}
+
+model ProductTarget {
+  id               String         @id @default(cuid())
+  productManagerId String
+  year             Int            @default(2026)
+  
+  jan              Decimal        @default(0)
+  feb              Decimal        @default(0)
+  mar              Decimal        @default(0)
+  apr              Decimal        @default(0)
+  may              Decimal        @default(0)
+  jun              Decimal        @default(0)
+  jul              Decimal        @default(0)
+  aug              Decimal        @default(0)
+  sep              Decimal        @default(0)
+  oct              Decimal        @default(0)
+  nov              Decimal        @default(0)
+  dec              Decimal        @default(0)
+
+  productManager   ProductManager @relation(fields: [productManagerId], references: [id], onDelete: Cascade)
+
+  @@unique([productManagerId, year])
+}
+
+model Invoice {
+  id               String         @id @default(cuid())
+  description      String
+  amount           Decimal
+  invoiceDate      DateTime
+  createdAt        DateTime       @default(now())
+
+  salesManagerId   String
+  productManagerId String
+
+  salesManager     SalesManager   @relation(fields: [salesManagerId], references: [id])
+  productManager   ProductManager @relation(fields: [productManagerId], references: [id])
+}
