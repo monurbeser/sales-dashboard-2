@@ -35,6 +35,7 @@ export function InvoiceModal({ isOpen, onOpenChange }: InvoiceModalProps) {
     queryKey: ['salesManagers'],
     queryFn: async () => {
       const res = await fetch('/api/sales-managers');
+      if (!res.ok) return [];
       return res.json();
     },
   });
@@ -43,6 +44,7 @@ export function InvoiceModal({ isOpen, onOpenChange }: InvoiceModalProps) {
     queryKey: ['productManagers'],
     queryFn: async () => {
       const res = await fetch('/api/product-managers');
+      if (!res.ok) return [];
       return res.json();
     },
   });
@@ -118,7 +120,7 @@ export function InvoiceModal({ isOpen, onOpenChange }: InvoiceModalProps) {
                      </SelectTrigger>
                    </FormControl>
                    <SelectContent>
-                     {salesManagers.map((m: any) => (
+                     {Array.isArray(salesManagers) && salesManagers.map((m: any) => (
                        <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                      ))}
                    </SelectContent>
@@ -141,7 +143,7 @@ export function InvoiceModal({ isOpen, onOpenChange }: InvoiceModalProps) {
                      </SelectTrigger>
                    </FormControl>
                    <SelectContent>
-                     {productManagers.map((m: any) => (
+                     {Array.isArray(productManagers) && productManagers.map((m: any) => (
                        <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                      ))}
                    </SelectContent>

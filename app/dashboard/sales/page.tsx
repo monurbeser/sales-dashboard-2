@@ -35,9 +35,10 @@ export default function SalesDashboard() {
     queryKey: ['salesManagers'],
     queryFn: async () => {
       const res = await fetch('/api/sales-managers');
+      if (!res.ok) throw new Error('API error');
       const data = await res.json();
-      if (data.length > 0 && !selectedManager) setSelectedManager(data[0].id);
-      return data;
+      if (Array.isArray(data) && data.length > 0 && !selectedManager) setSelectedManager(data[0].id);
+      return Array.isArray(data) ? data : [];
     },
   });
 
